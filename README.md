@@ -5,4 +5,4 @@
 
 [Lista de Tareas](https://github.com/users/gabi-devel/projects/5/views/1).
 
-Planeación ([Tareas o Ideas/Propuestas])(https://github.com/gabi-devel/app_negocios/issues/4)
+[Planeación: Tareas, Ideas, Propuestas](https://github.com/gabi-devel/app_negocios/issues/4)
