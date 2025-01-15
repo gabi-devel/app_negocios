@@ -3,4 +3,4 @@
 
 ## Lista de Tareas:
 
-Ordenadas por [Etapas]([https://opensource.org/licenses/MIT](https://github.com/users/gabi-devel/projects/5/views/3)).
+Ordenadas por [Etapas](https://github.com/users/gabi-devel/projects/5/views/3).
