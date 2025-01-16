@@ -1,0 +1,15 @@
+// Variables
+//@import 'variables';
+@use 'variables';
+/* Nota: Cuando uses @use, debes referenciar las variables o mixins con un prefijo. Por ejemplo, si en variables.scss 
+tienes una variable $primary-color, en tu archivo principal usarás:
+@use 'variables';
+body {
+  color: variables.$primary-color;
+} */
+ 
+// Fonts
+@import url('https://fonts.bunny.net/css?family=Nunito');
+
+// Bootstrap
+@import 'bootstrap/scss/bootstrap';
