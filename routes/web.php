@@ -24,7 +24,7 @@ Route::get('/login', function () {
 
 Route::get('/escanear', function () {
     return view('escanear');
-});
+})->name('escanear');
 
 Route::post('/guardar-codigoBarra', [CodBarrasController::class, 'store']);
 
