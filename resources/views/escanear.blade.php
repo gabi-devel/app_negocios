@@ -1,5 +1,6 @@
 @extends('layouts.app')
 
+<<<<<<< HEAD
 @section('estilos')
     <link rel="manifest" href="/manifest.json">
 @endsection
@@ -18,6 +19,17 @@
 
     <script>
         // Inicializar Quagga
+=======
+@section('content')
+
+<div class="relative sm:flex sm:justify-center sm:items-center min-h-screen bg-dots-darker bg-center bg-gray-100 dark:bg-dots-lighter dark:bg-gray-900 selection:bg-red-500 selection:text-white">
+    <div class="max-w-7xl mx-auto p-6 lg:p-8">
+
+        <script src="https://cdn.jsdelivr.net/npm/quagga@0.12.1/dist/quagga.min.js"></script>
+        <div id="scanner-container"></div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+>>>>>>> 975fb21d3bc686052533c5720b1d6d6486987769
         Quagga.init(
             {
                 inputStream: {
@@ -64,6 +76,7 @@
                 return;
             }
 
+<<<<<<< HEAD
             const barcodeDetector = new BarcodeDetector({ formats: ['ean_13', 'ean_8', 'code_128'] });
             const video = document.getElementById("barcode-video");
             video.style.display = "block";
@@ -114,3 +127,14 @@
     </script>
 </div>
 @endsection
+=======
+        
+        <div class="mt-16">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
+                <p>Holaa</p>
+            </div>
+        </div>
+    </div>
+</div>
+@endsection
+>>>>>>> 975fb21d3bc686052533c5720b1d6d6486987769
