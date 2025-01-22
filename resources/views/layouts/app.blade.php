@@ -2,19 +2,22 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {{--  <meta name="viewport" content="width=device-width, initial-scale=1">  --}}
+    <meta name="theme-color" content="#007bff">
 
-    <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
-
+    
     <title>{{ config('app.name', 'Laravel') }}</title>
+
+    <link rel="manifest" href="/manifest.json">
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
 
-    <!-- Scripts -->
-    @vite(['resources/sass/app.scss', 'resources/js/app.js'])
+    {{--  @vite(['resources/sass/app.scss', 'resources/js/app.js'])  --}}
+    @yield('estilos')
 </head>
 <body>
     <div id="app">
@@ -76,5 +79,18 @@
             @yield('content')
         </main>
     </div>
+
+    <script>
+        if ("serviceWorker" in navigator) {
+            navigator.serviceWorker.register("/service-worker.js")
+                .then((registration) => {
+                    console.log("Service Worker registrado con éxito:", registration);
+                })
+                .catch((error) => {
+                    console.error("Error al registrar el Service Worker:", error);
+                });
+        }
+    </script>
+    
 </body>
 </html>
