@@ -1,8 +1,8 @@
 @extends('layouts.app')
-
+{{--  
 @section('estilos')
     <link rel="manifest" href="/manifest.json">
-@endsection
+@endsection  --}}
 
 @section('content')
 
@@ -14,7 +14,7 @@
     <div id="scanner-container"></div>
     <p><strong>Código detectado:</strong> <span id="scanned-code"></span></p>
     <video id="barcode-video" style="display: none; width: 300px; height: auto;"></video>
-    {{--  <p><strong>Código con BarcodeDetector:</strong> <span id="barcode-result"></span></p>  --}}
+    {{--  <p><strong>Código con BarcodeDetector:</strong> <span id="barcode-result">N/A</span></p>  --}}
         
     <script>
         document.addEventListener('DOMContentLoaded', function () {
@@ -23,10 +23,22 @@
                     inputStream: {
                         type: "LiveStream",
                         target: document.querySelector("#quagga-container"),
+                        constraints: {
+                            width: 640,  // Mayor resolución para mejorar detalle
+                            height: 480,
+                            facingMode: "environment",
+                            zoom: 2   // Aumenta el zoom digital
+                        }
                     },
                     decoder: {
                         readers: ["ean_reader", "code_128_reader"], // Tipos de códigos a escanear
+                        multiple: false
                     },
+                    locate: true,
+                    locator: {
+                        patchSize: "small",  // medium   Puedes probar "small" si los códigos son muy pequeños
+                        halfSample: true
+                    }
                 },
                 function (err) {
                     if (err) {
@@ -38,23 +50,38 @@
                 }
             );
 
-            // Manejamos la detección de Quagga
             Quagga.onDetected(function (result) {
                 const code = result.codeResult.code;
                 console.log("Código detectado por Quagga:", code);
                 document.getElementById("scanned-code").textContent = code;
-
-                // Mostrar un mensaje de confirmación
-                const userResponse = confirm(`Código detectado por Quagga: ${code}\n¿Es correcto?`);
-
-                if (userResponse) { // Si el usuario confirma, detener Quagga
+            
+                fetch('/api/codigos', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                    },
+                    body: JSON.stringify({ codigo_barra: code })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    alert(data.message); // Mensaje desde el backend
                     Quagga.stop();
-                    alert("Código confirmado: " + code);
-                } else { // Si el usuario no confirma, detener Quagga y usar BarcodeDetector
+                })
+                .catch(error => {
+                    console.error("Error al guardar el código:", error);
                     Quagga.stop();
-                    alert("Intentando escanear con otra tecnología...");
-                    useBarcodeDetector();
+                });
+            });
+            
+            navigator.mediaDevices.getUserMedia({
+                video: {
+                    facingMode: "environment",
+                    focusMode: "continuous"  // Enfoca automáticamente
                 }
+            }).then(stream => {
+                let video = document.getElementById("barcode-video");
+                video.srcObject = stream;
             });
 
             // Función para usar BarcodeDetector
@@ -66,47 +93,28 @@
 
                 const barcodeDetector = new BarcodeDetector({ formats: ['ean_13', 'ean_8', 'code_128'] });
                 const video = document.getElementById("barcode-video");
-                video.style.display = "block";
+                const canvas = document.createElement("canvas");
+                const ctx = canvas.getContext("2d");
 
                 try {
                     const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } });
                     video.srcObject = stream;
                     video.play();
 
-                    const scanBarcode = async () => {
-                        try {
-                            const barcodes = await barcodeDetector.detect(video);
-                            if (barcodes.length > 0) {
-                                const detectedCode = barcodes[0].rawValue;
-                                document.getElementById("barcode-result").textContent = detectedCode;
-
-                                // Preguntar si el código es correcto
-                                const userResponse = confirm(`Código detectado con BarcodeDetector: ${detectedCode}\n¿Es correcto?`);
-
-                                if (userResponse) {
-                                    alert("Código confirmado: " + detectedCode);
-                                    stream.getTracks().forEach((track) => track.stop());
-                                    video.style.display = "none";
-                                } else {
-                                    alert("Intentando nuevamente...");
-                                }
-                            } else {
-                                document.getElementById("barcode-result").textContent = "No se detectó ningún código.";
-                            }
-                        } catch (error) {
-                            console.error("Error al detectar el código:", error);
-                        }
-                    };
-
-                    // Escanear continuamente cada 500ms
-                    const interval = setInterval(scanBarcode, 500);
-
                     // Detener el escaneo después de un tiempo o cuando se confirme
-                    setTimeout(() => {
-                        clearInterval(interval);
-                        stream.getTracks().forEach((track) => track.stop());
-                        video.style.display = "none";
-                    }, 30000); // Detener tras 30 segundos
+                    setTimeout(async () => {
+                        canvas.width = video.videoWidth;
+                        canvas.height = video.videoHeight;
+                        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+                        const barcodes = await barcodeDetector.detect(canvas);
+            
+                        if (barcodes.length > 0) {
+                            alert("Código detectado: " + barcodes[0].rawValue);
+                            stream.getTracks().forEach(track => track.stop());
+                        } else {
+                            alert("No se detectó ningún código.");
+                        }
+                    }, 2000); // Espera 2 segundos para capturar una imagen nítida
                 } catch (error) {
                     console.error("Error al acceder a la cámara:", error);
                 }
