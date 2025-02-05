@@ -2,22 +2,17 @@
 
 @section('content')
 <div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">{{ __('Dashboard') }}</div>
-
-                <div class="card-body">
-                    @if (session('status'))
-                        <div class="alert alert-success" role="alert">
-                            {{ session('status') }}
-                        </div>
-                    @endif
-
-                    {{ __('You are logged in!') }}
-                </div>
-            </div>
-        </div>
+    <h1>Dashboard</h1>
+    <div class="list-group">
+        <a href="{{ route('productos.cobrar') }}" class="list-group-item list-group-item-action">
+            Cobrar
+        </a>
+        <a href="{{ route('productos.create') }}" class="list-group-item list-group-item-action">
+            Agregar Producto
+        </a>
+        <a href="{{ route('productos.index') }}" class="list-group-item list-group-item-action">
+            Listado de Productos
+        </a>
     </div>
 </div>
 @endsection

@@ -2,7 +2,8 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="utf-8">
-    {{--  <meta name="viewport" content="width=device-width, initial-scale=1">  --}}
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
     <meta name="theme-color" content="#007bff">
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -16,12 +17,13 @@
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
 
-    {{--  @vite(['resources/sass/app.scss', 'resources/js/app.js'])  --}}
     @yield('estilos')
+    <link rel="stylesheet" href="./css/styles.css">
+    <link rel="stylesheet" href="./css/responsive.css">
 </head>
 <body>
     <div id="app">
-        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
+        <nav class="navbar navbar-expand-md navbar-light shadow-sm background_azul">{{--  bg-white   --}}
             <div class="container">
                 <a class="navbar-brand" href="{{ url('/') }}">
                     {{ config('app.name', 'Laravel') }}
@@ -91,6 +93,25 @@
                 });
         }
     </script>
-    
+    <div class="container-fluid bg-dark">
+        <footer class="d-flex flex-wrap justify-content-between align-items-center pt-3 pb-4 mt-4 border-top text-light background_azul">
+          <p class="col-md-4 mb-0 text-body-secondary">© 2024 Company, Inc</p>
+      
+          <a href="/" class="col-md-4 d-flex align-items-center justify-content-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
+            {{--  <svg class="bi me-2" width="40" height="32"><use xlink:href="#bootstrap"></use></svg> --}}
+            <img src="./../android-chrome-192x192.png" alt="" srcset="" width="40" height="40">
+          </a>
+      
+          <ul class="nav col-md-4 justify-content-end">
+            <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Home</a></li>
+            <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Features</a></li>
+            <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Pricing</a></li>
+            <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">FAQs</a></li>
+            <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">About</a></li>
+          </ul>
+        </footer>
+    </div>
+
+    @yield('scripts')
 </body>
 </html>
