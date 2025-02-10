@@ -9,7 +9,7 @@ class Producto extends Model // Sigue el principio "Fat Models, Skinny Controlle
 {
     use HasFactory;
 
-    protected $fillable = ['producto', 'codigo_barra', 'marca', 'precio', 'cantidad', 'disponible', 'negocio_id'];
+    protected $fillable = ['nombre', 'codigo_barra', 'marca', 'precio', 'cantidad', 'disponible', 'negocio_id'];
 
     // Relación: Un producto pertenece a un negocio
     public function negocio()
@@ -32,7 +32,7 @@ class Producto extends Model // Sigue el principio "Fat Models, Skinny Controlle
 
         // Si no existe, crearlo
         return self::create([
-            'producto' => $data['producto'],
+            'nombre' => $data['nombre'],
             'codigo_barra' => $data['codigo_barra'],
             'marca' => $data['marca'],
             'precio' => $data['precio'],
@@ -45,7 +45,7 @@ class Producto extends Model // Sigue el principio "Fat Models, Skinny Controlle
     public function actualizarProducto($data)
     {
         $this->update([
-            'producto' => $data['producto'],
+            'nombre' => $data['nombre'],
             'codigo_barra' => $data['codigo_barra'],
             'marca' => $data['marca'],
             'precio' => $data['precio'],

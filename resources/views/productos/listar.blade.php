@@ -1,6 +1,23 @@
 @extends('layouts.app')
 
 @section('content')
+<style>
+{{--  :root {
+    --color-de-la-marca: #c6538c;
+    --color2: 20px;
+}
+.container {
+    h2 {
+        color:red;
+    }
+    table {
+        background-color: yellow;
+        tr {
+            font-size: var(--color2);
+        }
+    }
+}  --}}
+</style>
 <div class="container">
     <h2>Lista de Productos</h2>
 
@@ -18,7 +35,7 @@
         <tbody>
             @foreach ($productos as $producto)
                 <tr>
-                    <td>{{ $producto->producto }}</td>
+                    <td>{{ $producto->nombre }}</td>
                     <td>{{ $producto->codigo_barra }}</td>
                     <td>{{ $producto->marca }}</td>
                     <td>${{ number_format($producto->precio, 2, ',', '.') }}</td>

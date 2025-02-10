@@ -5,9 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Producto;
 use App\Models\Negocio;
 use Illuminate\Http\Request;
-
 /* use App\Models\User; */
-
 
 class ProductoController extends Controller
 {
@@ -23,23 +21,31 @@ class ProductoController extends Controller
         return view('productos.listar', compact('productos'));
     }
 
-    public function obtenerProducto($codigoBarra)
+    public function buscarProducto($codigo)
     {
-        $producto = Producto::where('codigo_barra', $codigoBarra)->first();
+        $negocio_id = auth()->user()->negocio->id;
+        
+        $producto = Producto::where('codigo_barra', $codigo)
+            ->where('negocio_id', $negocio_id) // Filtra por el negocio del usuario
+            ->first();
 
-        if ($producto) {
-            return response()->json([
-                'success' => true,
-                'producto' => [
-                    'id' => $producto->id,
-                    'nombre' => $producto->producto,
-                    'precio' => $producto->precio,
-                ],
-            ]);
+        if (!$producto) {
+            return response()->json(['success' => false, 'message' => 'Producto no encontrado'], 404);
         }
-
-        return response()->json(['success' => false, 'message' => 'Producto no encontrado']);
+    
+        return response()->json([
+            'success' => true,
+            'producto' => [
+                'id' => $producto->id,
+                'nombre' => $producto->nombre,
+                'marca' => $producto->marca,
+                'precio' => $producto->precio,
+                /* 'cantidad' => $producto->cantidad, */
+            ]
+        ]);
     }
+
+        
 
     public function confirmarCompra(Request $request)
     {
@@ -76,29 +82,6 @@ class ProductoController extends Controller
         $negocio = Negocio::crearNegocio($user);
 
         Producto::crear_o_actualizar_producto($data, $negocio->id);
-        
-        /* $data = $request->validate([
-            'producto' => 'nullable|string|max:255',
-            'codigo_barra' => 'nullable|string|unique:productos,codigo_barra|max:255',
-            'marca' => 'nullable|string|max:255',
-            'precio' => 'nullable|numeric|min:0',
-            'cantidad' => 'nullable|integer|min:0',
-            'disponible' => 'boolean',
-            'negocio_id' => 'required|exists:negocios,id'
-        ]);
-
-        
-        // Crear o actualizar el producto en base de datos
-        if ($producto) {
-            // Si el producto ya existe, actualizar su precio
-            $producto->update([
-                'precio' => $request->precio,
-                'cantidad' => $request->cantidad, 
-            ]);
-        } else {
-            // Si no existe, crearlo
-            Producto::create($data); 
-        } */
 
         return redirect()->back()->with('success', 'Producto agregado correctamente.');
     }
@@ -119,7 +102,7 @@ class ProductoController extends Controller
     public function update(Request $request, Producto $producto)
     {
         $request->validate([
-            'producto' => 'nullable|string|max:255',
+            'nombre' => 'nullable|string|max:255',
             'codigo_barra' => 'nullable|string|max:255|unique:productos,codigo_barra,' . $producto->id,
             'marca' => 'nullable|string|max:255',
             'precio' => 'nullable|numeric|min:0',
@@ -138,4 +121,26 @@ class ProductoController extends Controller
 
         return redirect()->back()->with('success', 'Producto eliminado correctamente.');
     }
+
+    public function buscarPorCodigo($codigo)
+    {
+        $negocioId = auth()->user()->negocio->id; // Asegúrate de que el usuario tenga negocio
+
+        $producto = Producto::where('negocio_id', $negocioId)
+                            ->where('codigo_barra', $codigo)
+                            ->first();
+
+        if ($producto) {
+            return response()->json([
+                'success' => true,
+                'producto' => $producto,
+            ]);
+        }
+        return response()->json([
+            'success' => false,
+            'message' => 'Producto no encontrado',
+        ], 404);
+    }
+
+
 }

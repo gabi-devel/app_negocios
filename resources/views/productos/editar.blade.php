@@ -11,8 +11,8 @@
             <input type="text" id="codigo_barra" name="codigo_barra" class="form-control"  required value="{{ old('codigo_barra', $producto->codigo_barra) }}">
         </div>
         <div class="mb-3">
-            <label for="producto" class="form-label">Nombre del Producto</label>
-            <input type="text" id="producto" name="producto" class="form-control" required value="{{ old('producto', $producto->producto) }}">
+            <label for="nombre" class="form-label">Nombre del Producto</label>
+            <input type="text" id="nombre" name="nombre" class="form-control" required value="{{ old('nombre', $producto->nombre) }}">
         </div>
         <div class="mb-3">
             <label for="marca" class="form-label">Marca</label>

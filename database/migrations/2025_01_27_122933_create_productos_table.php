@@ -10,14 +10,17 @@ return new class extends Migration
     {
         Schema::create('productos', function (Blueprint $table) {
             $table->id();
-            $table->string('producto')->nullable();
-            $table->string('codigo_barra')->unique()->nullable();
+            $table->string('nombre')->nullable();
+            $table->string('codigo_barra')->nullable();
             $table->string('marca')->nullable();
             $table->decimal('precio', 10, 2)->default(0); // 10 dígitos, 2 decimales
             $table->integer('cantidad')->nullable(); // si está en cero podría figurarles que deben reponer ese producto
             $table->boolean('disponible')->nullable()->default(true); // True = visible (para invisibilizarlo o no de alguna lista, en lugar de eliminar el producto)
             $table->timestamps(); 
 
+            // Índice único compuesto para que cada negocio tenga códigos únicos
+            $table->unique(['negocio_id', 'codigo_barra']);
+            
             $table->foreignId('negocio_id')->constrained()->onDelete('cascade'); // Relación con negocios
         });
     }
